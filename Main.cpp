@@ -2,6 +2,9 @@
 #include <cstring>
 #include "Node.h"
 
+#define RESET "\033[0m"
+#define RED "\033[31m"
+#define BLUE "\033[34m"
 
 Node* findNode(Node** list, char input, int indexCount);
 void addNode(char newName, Node **list, int indexCount);
@@ -114,5 +117,68 @@ void removeNode(char name, Node **list, int indexCount){
         }
     cout << endl;
     cout << "Vertex has been deleted" << endl;
+    }
+}
+
+void PRINT(Node **list, int indexCount){
+    //[row][column] (There's 21 spots to account for the nodes on top/Left)
+    char print[21][21];
+    //Sets it to empty
+    for(int i = 0; i < 21; i++){
+        for(int j = 0; j < 21; j++){
+            print[i][j] = ' ';
+        }
+    }
+    char edgePrint[20][20];
+    int num = 0;
+    //Build the adjacency matrix visual
+    //For the first row/column (Vertex Names)
+    while(num < indexCount){
+        print[0][num+1] = (list[num])->getName();
+        print[num+1][0] = (list[num])->getName();
+        num++;
+    }
+    //Creates a display of all the edges
+    for(int i = 0; i < indexCount; i++){
+        Node* vertex = list[i];
+        for(int j = 0; j < indexCount; j++){
+            Node* vertex2 = list[j];
+            //If the two have a shared edge
+            if(vertex->getEdge(vertex2->getIndex()) != 0){
+            //Print true
+                edgePrint[i][j] = 'T';
+            }
+            //Otherwise print false
+            else{
+                edgePrint[i][j] = 'F';
+            }
+        }
+    }
+    //Place the matrix in the main array
+    for(int i = 0; i < indexCount; i++){
+        for(int j = 0; j < indexCount; j++){
+            //Insert 
+            print[i+1][j+1] = edgePrint[i][j];
+        }
+    }
+    //Print out the whole thing
+    for(int i = 0; i < 21; i++){
+        for(int j = 0; j < 21; i++){
+            //If true print in blue (except for node names)
+            if(print[i][j] == 'T' && i != 0 && j != 0){
+                cout << BLUE << print[i][j] << RESET << '\t';
+            }
+            //If false print in false
+            else if(print[i][j] == 'F' && i != 0 && j != 0){
+                cout << RED << print[i][j] << RESET << '\t';
+            }
+            else{
+                cout << print[i][j] << '\t';
+            }
+        }
+    cout << endl;
+    if(print[i+1][0] == ' '){
+        break;
+    }
     }
 }
