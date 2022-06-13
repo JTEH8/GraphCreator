@@ -8,11 +8,11 @@
 
 Node* findNode(Node** list, char input, int indexCount);
 void addNode(char newName, Node **list, int indexCount);
-void addEdge(Node ** list, int indexCount);
+void addEdge(char node1, char node2, int edgeValue, Node ** list, int indexCount);
 void PRINT(Node **list, int indexCount);
 void PATH(char firstNode, char secondNode, char* vertices[20], int* edges[20][20]);
 void deleteNode(char name, Node **list, int indexCount);
-void deleteEdge(Node **list, int indexCount);
+void deleteEdge(char node1, char node2, Node **list, int indexCount);
 
 using namespace std;
 
@@ -29,12 +29,25 @@ cout << "To remove a vertex type 'VREMOVE'. To remove an edge, type 'EREMOVE'. "
 cout << "To search for the shortest path type 'PATH'. To print, type 'PRINT'." << endl;
 cout << "To quit type QUIT." << endl;
 cin >> input;
-if(strcmp(input, "ADDV") == 0){
+if(strcmp(input, "VADD") == 0){
     char temp;
     cout << "Enter the  character name for the new vertex." << endl;
     cin >> temp; 
     addNode(temp, list, IndexCounter);
     IndexCounter++;
+    }
+else if(strcmp(input, "EADD") == 0){
+    char node1;
+    char node2;
+    int num = 0;
+    cout << "What is the first vertex you want to add an edge to?" << endl;
+    cin >> node1; 
+    cout << "What is the second vertex you want to add an edge to?" << endl;
+    cin >> node2; 
+    cout << "What do you want to set the value of the edge as?" << endl;
+    cin >> num;
+    addEdge(node1, node2, num, list, IndexCounter);
+    cout << "Edge successfully deleted." << endl;
     }
 else if(strcmp(input, "DELETEV")){
     char name;
@@ -180,5 +193,50 @@ void PRINT(Node **list, int indexCount){
     if(print[i+1][0] == ' '){
         break;
     }
-    }
+    }   
+}
+
+void addEdge(char node1, char node2, int edgeValue, Node ** list, int indexCount){
+//If there's not two vertices in the graph
+if(list[0] == NULL || list[1] == NULL){
+    cout << "Sorry, but you're going to have to add more than one vertex before you can add an edge." << endl;
+    return;
+}
+else{
+//Find the two nodes
+Node* vertex1 = findNode(list, node1, indexCount);
+Node* vertex2 = findNode(list, node2, indexCount);
+//If one of them doesn't exist
+if(vertex1 == NULL || vertex2 == NULL){
+    cout << "Unable to find the vertices you're looking for." << endl;
+    return;
+}
+else{
+    //Connect the two vertices
+     vertex1->setEdge(vertex2->getIndex(), edgeValue);
+     vertex2->setEdge(vertex1->getIndex(), edgeValue);
+}
+}
+}
+
+void deleteEdge(char node1, char node2, Node **list, int indexCount){
+    //Same as in addEdge, make sure that two or more vertices actually exist
+if(list[0] == NULL || list[1] == NULL){
+    cout << "Sorry, but you're going to have to add more than one vertex before you can delete an edge." << endl;
+    return;
+}   
+else{
+    //Find the two nodes
+    Node* vertex1 = findNode(list, node1, indexCount);
+    Node* vertex2 = findNode(list, node2, indexCount);
+    if(vertex1 == NULL || vertex2 == NULL){
+    cout << "Unable to find the vertices you're looking for." << endl;
+    return;
+}
+else{
+    //Instead of connecting the vertices, set the edge between them to 0.
+     vertex1->setEdge(vertex2->getIndex(), 0);
+     vertex2->setEdge(vertex1->getIndex(), 0);
+}
+}
 }
