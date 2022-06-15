@@ -26,7 +26,7 @@ cout << "Welcome to Graph Creator!" << endl;
 while(running == true){
 cout << "To add a vertex, type 'VADD'. To add an edge, type 'EADD'. " << endl;
 cout << "To remove a vertex type 'VREMOVE'. To remove an edge, type 'EREMOVE'. " << endl;
-cout << "To search for the shortest path type 'PATH'. To print, type 'PRINT'." << endl;
+cout << "To print, type 'PRINT'." << endl;
 cout << "To quit type QUIT." << endl;
 cin >> input;
 if(strcmp(input, "VADD") == 0){
@@ -47,23 +47,20 @@ else if(strcmp(input, "EADD") == 0){
     cout << "What do you want to set the value of the edge as?" << endl;
     cin >> num;
     addEdge(node1, node2, num, list, IndexCounter);
-    cout << "Edge successfully deleted." << endl;
+    cout << "Edge successfully added." << endl;
     }
-else if(strcmp(input, "DELETEV")){
+else if(strcmp(input, "VREMOVE") == 0){
     char name;
     cout << "What is the name of the vertex you want to delete?" << endl;
     cin >> name;
     deleteNode(name, list, IndexCounter);
     IndexCounter--;
 }
-else if(strcmp(input, "PRINT")){
+else if(strcmp(input, "PRINT") == 0){
     PRINT(list, IndexCounter);
     cout << endl;
 }
-else if(strcmp(input, "PATH") == 0){
-    char firstNode;
-}
-else if(strcmp(input, "QUIT")){
+else if(strcmp(input, "QUIT") == 0){
     cout << "Thanks for using graph creator!" << endl;
     running = false;
 }
@@ -71,6 +68,17 @@ else{
     cout << "Invalid input, please enter something else." << endl;
         }
     }
+}
+
+//Finds the node in the list
+Node* findNode(Node** list, char input, int indexCount){
+    for(int i = 0; i < indexCount; i++){
+        if((list[i])->getName() == input){
+            return (list[i]);
+            break;
+            }
+    }
+    return NULL;
 }
 
 void addNode(char newName, Node **list, int indexCount){
@@ -85,7 +93,7 @@ void addNode(char newName, Node **list, int indexCount){
     cout << "Vertex " << newVertex->getName() << " added." << endl;
 }
 
-void removeNode(char name, Node **list, int indexCount){
+void deleteNode(char name, Node **list, int indexCount){
     if(list[0] == NULL){
         cout << endl;
         cout << "There's no vertices currently on the graph! Add some first." << endl;
@@ -133,6 +141,7 @@ void removeNode(char name, Node **list, int indexCount){
     }
 }
 
+
 void PRINT(Node **list, int indexCount){
     //[row][column] (There's 21 spots to account for the nodes on top/Left)
     char print[21][21];
@@ -142,6 +151,7 @@ void PRINT(Node **list, int indexCount){
             print[i][j] = ' ';
         }
     }
+    
     char edgePrint[20][20];
     int num = 0;
     //Build the adjacency matrix visual
